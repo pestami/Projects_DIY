@@ -21,33 +21,93 @@ from CAX_XML import  cax_xml_rom
 
 #==============================================================================
 #===============================================================================
-################################################################################
-if __name__ == '__main__':
- ################################################################################
-    print ("======================================================")
-    print ("Arguments List ==================================")
-    print ("======================================================")
-    print ('argument list:', sys.argv)
-    if len(sys.argv)>2:
-        sFLAGS = sys.argv[1]
+
+def SetFlags(sFLAGS):
     
-    FLAGS = {
+     FLAGS = {
     "PATHS": 1,"INITIALIZE_DB": 0,
     "LOADLISTGAMES": 0,"LOADROMS": 0,"LOADIMAGES": 0,
     "LOADMEDIA":0,"LOADIMAGESSCRAPED": 0,
     "LOADLISTGAMES_2_XML_DB": 1
      }      
-    if len(sys.argv)>2:
-       i=0
-       for item in FLAGS:
-           i=+1
-           FLAGS[item]=sFLAGS[i]
+ 
+     i=0
+     for item in FLAGS:
+          
+           FLAGS[item]=int(sFLAGS[i])
+           i+=1
+           
+     print('SetFags()=' + str(FLAGS) )    
+     return FLAGS
+#===============================================================================
+def SetFagsConsole(sFLAGSConsole):
     
-    print(FLAGS)
+     FLAGSConsole = {
+    "arcade":0,
+    "atari2600":0,
+    "atari5200":0,
+    "atari7800":0,
+    "c64":0,
+    "dreamcast":0,
+    "gba":0,
+    "gc":0,
+    "mame":0,
+    "mame-advmame":0,
+    "mame-libretro":0,
+    "mame-mame4all":0,
+    "mastersystems":0,
+    "megadrive":0,
+    "n64":0,
+    "nds":0,
+    "neogeo":0,
+    "nes":0,
+    "pc":0,
+    "ports":0,
+    "psp":0,
+    "psx":0,
+    "saturn":0,
+    "sg-1000":0,
+    "snes":0,
+    "TurboGrafX":0,
+    "zxspectrum":0,
+
+     }      
  
- 
+     i=0
+     for item in FLAGSConsole:
+           
+           FLAGSConsole[item]=int(sFLAGSConsole[i])
+           i+=1
+     print('SetFags()=' + str(FLAGSConsole) )
+    
+     return FLAGSConsole
+###############################################################################
+if __name__ == '__main__':
+ ##############################################################################
     print ("======================================================")
-    print ("Directories List ==================================")
+    print ("Arguments List =======================================")
+    print ("======================================================")
+    print ('argument list:', sys.argv)
+    print ("======================================================")
+    
+    if len(sys.argv)>1:
+          print('ARG1=1 =' +sys.argv[1])
+          FLAGS = SetFlags(sys.argv[1])
+          
+    else:
+         FLAGS = SetFlags('10000001X')   
+         #################12345678
+    print ("\n------------------------------------------------------")     
+    if len(sys.argv)>2:
+         print('ARG2=' +sys.argv[2])
+         FLAGSConsole = SetFagsConsole(sys.argv[2])
+          
+    else:
+         FLAGSConsole = SetFagsConsole('000000000000000000000000001X') 
+         
+    #print(FLAGS)
+    print ("======================================================")
+    print ("Directories List =====================================")
     print ("======================================================")
     sCurrentDir =os.path.realpath(os.path.dirname(__file__))
     sROOT= "\\".join(sCurrentDir.split("\\")[:-1])
@@ -83,18 +143,7 @@ if __name__ == '__main__':
     print ("1. BEGIN TEST XML ==================================")
     print ("======================================================")
     #/media/pi/ROM_EXTRA/gameslists/ps2
-    
-    
-    FLAGS = {
-      "PATHS": 1,
-      "INITIALIZE_DB": 0,
-      "LOADLISTGAMES": 0,
-      "LOADROMS": 0,
-      "LOADIMAGES": 0,
-      "LOADMEDIA":0,
-      "LOADIMAGESSCRAPED": 0,
-      "LOADLISTGAMES_2_XML_DB": 0
-     }          
+        
     
     CAX_ROM=cax_xml_rom(sROOT)
         
@@ -146,13 +195,29 @@ if __name__ == '__main__':
 
     if FLAGS["LOADLISTGAMES_2_XML_DB"]==1:
         print ("\n======================================================")
-        print ("2. BEGIN RESULTS show Game [lCollection] ============")
-
-        console='c64'
-        CAX_ROM.Load_xml_gameslist(sROOT,sPathFileDB,console)
+        print ("2. BEGIN RESULTS show Game GAMES_2_XM [lCollection] =====")
         
-        console='psp'
-        CAX_ROM.Load_xml_gameslist(sROOT,sPathFileDB,console)
+        print (sROOT)
+        print (sPathFileDB)
+        print ("\n------------------------------------------------------")
+        for key in FLAGSConsole:
+             console=key
+             value=FLAGSConsole[key]            
+             print('Loading XML contents for:' +console + " " + str(value))
+            
+           
+        for key in FLAGSConsole:
+             console=key
+             value=FLAGSConsole[key]          
+            
+            
+             if value==1:
+                print('Loading XML contents for:' +console)
+                CAX_ROM.Load_xml_gameslist(sROOT,sPathFileDB,console)
+        
+
+        
+        
         print ("======================================================")
 
    # CAX_ROM.make_xml("c64","gamelist.xml")
