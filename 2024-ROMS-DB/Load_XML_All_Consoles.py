@@ -204,7 +204,8 @@ if __name__ == '__main__':
              console=key
              value=FLAGSConsole[key]            
              print('Loading XML contents for:' +console + " " + str(value))
-            
+             
+         print ("\n------------------------------------------------------")       
            
         for key in FLAGSConsole:
              console=key
