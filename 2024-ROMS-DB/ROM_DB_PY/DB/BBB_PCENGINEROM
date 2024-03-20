@@ -1,0 +1,7 @@
+    DROP VIEW IF EXISTS BBB_PCENGINEROM;
+	CREATE VIEW BBB_PCENGINEROM AS
+    SELECT LIST_ROMS.NAMEROM AS name, 
+	'./'||LIST_ROMS.FILE as path,
+	'Game ' as desc, '~/.emulationstation/downloaded_images/'||CONSOLE||'/'||NAMEROM||'-image.png' as image
+    FROM LIST_ROMS
+    WHERE LIST_ROMS.CONSOLE='pcengine'; 

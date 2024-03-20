@@ -400,37 +400,68 @@ class cax_xml_rom:
         print ("")
         print ("======================================================")
     #==============================================================================
-    def make_xml(self,sConsole,sFileNameXML):
+    def make_xml(self,sPathFileDB, sRoot,sConsole,sFileNameXML):
 
-        sPathFilenameXML='D:/gameslistsnew/' + sConsole+ '/' + sFileNameXML
+        sPathFilenameXML=sRoot + '/' + sConsole+ '/' + sFileNameXML
+        
+        con = sqlite3.connect(sPathFileDB)
+        con.text_factory = str
+        cur = con.cursor()
+        SQL11='''select * from BBB_NEW_GAMESLISTS
+        where console=''' + '\'' + sConsole + '\'' 
+        
+        cur.execute(SQL11)
+        resultSQL11=cur.fetchall()
+        con.commit()
+        con.close()
+        
+        print(resultSQL11)
 
-        doc = Document();
-        node1 = doc.createElement('gameList')
-        node2 = doc.createElement('game')
-        node3 = doc.createElement('name')
-
-        doc.appendChild(node1)
-        node1.appendChild(node2)
-        node1.appendChild(node3)
-    ##    node1.createTextNode('bar')
-
-
-        print ("Test:----Make a XML File-------------")
-        doc.writexml(sys.stdout)
-##        doc.writexml(sFileNameXML)
-##        doc.saveXML(sFileNameXML)
-
-        import xml.etree.cElementTree as ET
-
-        root = ET.Element("root")
-        doc = ET.SubElement(root, "doc")
-
-        ET.SubElement(doc, "field1", name="blah").text = "some value1"
-        ET.SubElement(doc, "field2", name="asdfasd").text = "some vlaue2"
+        import xml.etree.ElementTree as ET
+# =============================================================================
+# <gameList>
+#	<game>
+#		<path>./15-in-1 Mega Collection - Backtracking Ten Years (J).zip</path>
+#		<name>15-in-1 Mega Collection - Backtracking Ten Years</name>
+#		<desc> </desc>
+#		<image>~/.emulationstation/downloaded_images/pcengine/xxxxx-image.png</image>
+#		<releasedate>19920101T000000</releasedate>
+#		<publisher>Image</publisher>
+#		<genre>Compilation</genre>
+#		<players></players>
+#	</game>
+# =============================================================================
+        #ET.SubElement(doc, "field1", name="blah").text = "some value1"
+        root = ET.Element("gameList")
+        for GAME in resultSQL11:
+            
+            doc = ET.SubElement(root, "game")
+            ET.SubElement(doc, "path").text = GAME[1]
+            ET.SubElement(doc, "name").text = GAME[2]
+            ET.SubElement(doc, "desc").text = GAME[3]
+            ET.SubElement(doc, "image").text = GAME[4]
+            ET.SubElement(doc, "releasedate").text =GAME[5]
+            ET.SubElement(doc, "publisher").text = GAME[6]
+            ET.SubElement(doc, "players").text = GAME[7]
+ 
 
         tree = ET.ElementTree(root)
-        ET.indent(tree, space="\t", level=0)
+        print ("\n---UNFORMATED PRINT-------------------------------------------")  
+        print(ET.tostring(root, encoding='utf8').decode('utf8'))        
+       # ET.indent(tree, space="\t", level=0)  # Python 3.8 upward        
         tree.write(sPathFilenameXML, encoding="utf-8")
+        #------------------------------------------------------------------------
+        from lxml import etree 
+        
+        temp = etree.parse(sPathFilenameXML) 
+        new_xml = etree.tostring(temp, pretty_print = True, encoding = str) 
+        print ("\n---PRETTY PRINT--------------------------------------------")  
+        print(new_xml)
+        #------------------------------------------------------------------------
+        # Opening a file
+        file1 = open(sPathFilenameXML, 'w')
+        file1.writelines(new_xml)
+        file1.close()
 
         print ("")
         print ("======================================================")

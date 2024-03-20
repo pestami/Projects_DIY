@@ -1,0 +1,14 @@
+DROP VIEW IF EXISTS BBB_NEW_GAMESLISTS;
+
+CREATE VIEW BBB_NEW_GAMESLISTS AS
+    SELECT 
+	LIST_ROMS.CONSOLE AS console, 
+	'./'||LIST_ROMS.FILE as path,	
+    LIST_ROMS.NAMEROM AS name, 
+	'GAME' as desc,
+	'~/.emulationstation/downloaded_images/'||CONSOLE||'/'||NAMEROM||'-image.png' as image,
+	'' as releasedate,
+	'INTERNET ARCHIVE '||CONSOLE as publisher,
+	'One or Many' as players
+	FROM LIST_ROMS
+    WHERE LIST_ROMS.CONSOLE like '%'

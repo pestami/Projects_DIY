@@ -70,6 +70,7 @@ def SetFagsConsole(sFLAGSConsole):
     "snes":0,
     "TurboGrafX":0,
     "zxspectrum":0,
+    "pcengine":0,
 
      }      
  
@@ -95,32 +96,49 @@ if __name__ == '__main__':
           FLAGS = SetFlags(sys.argv[1])
           
     else:
-         FLAGS = SetFlags('10000001X')   
+        #"1 1 PATHS 2 INITIALIZE_DB 3 LOADLISTGAMES 4 LOADROMS"
+        #2  1 LOADIMAGES 2 LOADMEDIA 3 LOADIMAGESSCRAPED 4 LOADLISTGAMES_2_XML_DB
+        sFLAGS='1001 1001 X'.replace(" ", "")
+        FLAGS = SetFlags(sFLAGS)         
          #################12345678
+         
     print ("\n------------------------------------------------------")     
     if len(sys.argv)>2:
          print('ARG2=' +sys.argv[2])
          FLAGSConsole = SetFagsConsole(sys.argv[2])
           
     else:
-         FLAGSConsole = SetFagsConsole('000000000000000000000000001X') 
+         #1 arcade"atari2600"atari5200"atari7800"
+         #2 c64"dreamcast"gba"gc"
+         #3 mame"mame-advmame""mame-libretro""mame-mame4all",
+         #4 "mastersystems"megadrive"n64"nds"
+         #5 "neogeo"nes"pc"ports"
+         #6 psp"psx"saturn"sg-1000"
+         #7 snes"TurboGrafX"zxspectrum"pcengine
+
+         sFLAGS='0000 0000 0000 0000 0000 0000 0000X'.replace(" ", "")
+         FLAGSConsole = SetFagsConsole(sFLAGS) 
+         
          
     #print(FLAGS)
     print ("======================================================")
     print ("Directories List =====================================")
     print ("======================================================")
-    sCurrentDir =os.path.realpath(os.path.dirname(__file__))
-    sROOT= "\\".join(sCurrentDir.split("\\")[:-1])
-    sROOT= "/".join(sCurrentDir.split("/")[:-1])
+#    sCurrentDir =os.path.realpath(os.path.dirname(__file__))
+#    sROOT= "\\".join(sCurrentDir.split("\\")[:-1])
+#    sROOT= "/".join(sCurrentDir.split("/")[:-1])
     
-    print ("Root Direcory=", sROOT)
+    sROOT_DB='/home/pi/Documents/Projects_DIY/2024-ROMS-DB/ROM_DB_PY'
+    sROOT_GAMES='/home/pi/ROMS_EXTRA'
+    
+    print ("Root GAMES Direcory=", sROOT_GAMES)
     
     #sROOT='/media/pi/ROM_EXTRA'
 
-    sPathFileDB=sROOT + '/RomsDB/DB/RetroRoms.db'
-    sPathIMAGES=sROOT + '/downloaded_images'
-    sPathGamesXML=sROOT + '/gameslists'
-    sPathROMS=sROOT + '/roms'
+    sPathFileDB=sROOT_DB + '/DB/RetroRoms.db'
+    sPathIMAGES=sROOT_GAMES + '/downloaded_images'
+    sPathGamesXML=sROOT_GAMES + '/gameslists'
+    sPathROMS=sROOT_GAMES + '/roms'
 
     print ("sPathFileDB=",sPathFileDB)
     print ("sPathIMAGES=",sPathIMAGES)
@@ -134,7 +152,7 @@ if __name__ == '__main__':
     #----------------------------
     # redirect StdOut output to log file
     if 1==2:
-        sPath_Log_File =sROOT + '/RomsDB/log.txt'
+        sPath_Log_File =sROOT_DB + '/RomsDB/log.txt'
         old_stdout = sys.stdout
         log_file = open(sPath_Log_File,'a')
         sys.stdout = log_file
@@ -143,50 +161,56 @@ if __name__ == '__main__':
     print ("1. BEGIN TEST XML ==================================")
     print ("======================================================")
     #/media/pi/ROM_EXTRA/gameslists/ps2
-        
+ 
+    sPathFileDB=sROOT_DB + '/DB/RetroRoms.db'
+    sPathIMAGES=sROOT_GAMES + '/downloaded_images'
+    sPathMEDIA=sROOT_GAMES + '/downloaded_media'
+    sPathIMAGESSCRAPED=sROOT_GAMES + '/downloaded_images_scraped'
+    sPathGamesXML=sROOT_GAMES + '/gameslists'
+    sPathROMS=sROOT_GAMES + '/roms'
     
-    CAX_ROM=cax_xml_rom(sROOT)
-        
-    sPathFileDB=sROOT + '/RomsDB/DB/RetroRoms.db'
-    sPathIMAGES=sROOT + '/downloaded_images'
-    sPathMEDIA=sROOT + '/downloaded_media'
-    sPathIMAGESSCRAPED=sROOT + '/downloaded_images_scraped'
-    sPathGamesXML=sROOT + '/gameslists'
-    sPathROMS=sROOT + '/roms'
+    CAX_ROM=cax_xml_rom(sROOT_GAMES)
 
     if FLAGS["INITIALIZE_DB"]==1 :
-        print ("\n========================================================")
+        print ("\n##########################################################")
         print ("Clear All Tables-------------")
         CAX_ROM.ROM_DB_Initialize(sPathFileDB)
 
     if FLAGS["LOADLISTGAMES"]==1 :
-        print ("\n========================================================")
+        print ("\n##########################################################")
         print ("Load Paths to GAMELISTS XML for each console into DB")
         CAX_ROM.ROM_DB_LoadListsGameXML(sPathFileDB,sPathGamesXML, flagDebug=1)  # Looks for XML files and loads file list into DB
-
+   
+    if FLAGS["LOADROMS"]==1 :
+        print ("\n##########################################################")
+        print ("Load RETROPIE ROM file paths  into DB")
+        print (sPathROMS)
+        CAX_ROM.ROM_DB_LoadRoms(sPathFileDB,sPathROMS, flagDebug=1)   # Looks for XML files and loads file list into DB
+        print ("======================================================")
+    
     if FLAGS["LOADIMAGES"]==1 :
-        print ("\n========================================================")
+        print ("\n##########################################################")
         print ("Load RETROPIE Images file paths  into DB")
         print (sPathIMAGES)
         CAX_ROM.ROM_DB_LoadImages(sPathFileDB,sPathIMAGES, flagDebug=1)   # Looks for XML files and loads file list into DB
         print ("======================================================")
     
     if FLAGS["LOADMEDIA"]==1 :
-        print ("\n========================================================")
+        print ("\n##########################################################")
         print ("Load RETROPIE Images file paths  into DB")
         print (sPathMEDIA)
         CAX_ROM.ROM_DB_LoadImages(sPathFileDB,sPathMEDIA, flagDebug=1)   # Looks for XML files and loads file list into DB
         print ("======================================================")
         
     if FLAGS["LOADIMAGESSCRAPED"]==1 :
-        print ("\n========================================================")
+        print ("\n##########################################################")
         print ("Load RETROPIE Images file paths  into DB")
         print (sPathIMAGESSCRAPED)
         CAX_ROM.ROM_DB_LoadImages(sPathFileDB,sPathIMAGESSCRAPED, flagDebug=1)   # Looks for XML files and loads file list into DB
         print ("======================================================")
         
     if FLAGS["LOADROMS"]==1 :
-        print ("\n========================================================")
+        print ("\n##########################################################")
         print ("Load RETROPIE ROMS file paths  into DB")
         print (sPathROMS)
         CAX_ROM.ROM_DB_LoadRoms(sPathFileDB,sPathROMS, flagDebug=1)   # Looks for XML files and loads file list into DB
@@ -194,10 +218,10 @@ if __name__ == '__main__':
 
 
     if FLAGS["LOADLISTGAMES_2_XML_DB"]==1:
-        print ("\n======================================================")
+        print ("\n##########################################################")
         print ("2. BEGIN RESULTS show Game GAMES_2_XM [lCollection] =====")
         
-        print (sROOT)
+        print (sROOT_GAMES)
         print (sPathFileDB)
         print ("\n------------------------------------------------------")
         for key in FLAGSConsole:
@@ -205,7 +229,7 @@ if __name__ == '__main__':
              value=FLAGSConsole[key]            
              print('Loading XML contents for:' +console + " " + str(value))
              
-         print ("\n------------------------------------------------------")       
+        print ("\n------------------------------------------------------")       
            
         for key in FLAGSConsole:
              console=key
@@ -214,11 +238,7 @@ if __name__ == '__main__':
             
              if value==1:
                 print('Loading XML contents for:' +console)
-                CAX_ROM.Load_xml_gameslist(sROOT,sPathFileDB,console)
-        
-
-        
-        
+                CAX_ROM.Load_xml_gameslist(sROOT_GAMES,sPathFileDB,console)        
         print ("======================================================")
 
    # CAX_ROM.make_xml("c64","gamelist.xml")
