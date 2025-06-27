@@ -21,3 +21,9 @@
 ## 105-Compassbox
 
 <img src="105-Compassbox/Compassbox.png" width="400" height="200">
+
+
+
+## 106-ParabolicMirror
+
+<img src="106-ParabolicMirror/ParabolicMirror.png" width="400" height="200">
