@@ -1,0 +1,40 @@
+import math
+
+nSIZE=10
+sNAME='ShapeString'
+fRadius=130
+X0=150 -nSIZE*0.8
+Y0=150 -nSIZE*0.8
+
+FreeCAD.ActiveDocument.getObject(sNAME).Size=nSIZE
+
+#-------------------------------------------------------------------
+for i in range(2, 26):
+
+	if (i>16):
+		nSIZE_LASER=nSIZE*0.8
+	else:
+		nSIZE_LASER=nSIZE
+
+	angle_deg=-90 - (i-1)*15
+
+	angle=angle_deg/180*3.14
+
+	X=X0 + fRadius * math.cos(angle) - nSIZE* math.cos(angle) -4
+	Y=Y0 + fRadius * math.sin(angle) - nSIZE* math.sin(angle)  +1
+
+	print(str(int(i)) +' '+ str(int(X)) +'  '+ str(int(Y)))
+
+	sShapeName='ShapeString' + str(i).zfill(3)
+	print(sShapeName)
+
+	#FreeCAD.ActiveDocument.getObject("ShapeString014").FontFile="C:/Users/sesa237770/Documents/Projects_DIY/002-24-hourclock/FONTS/Karla_BoldStencil.ttf"
+	FreeCAD.ActiveDocument.getObject(sShapeName).Placement.Base=FreeCAD.Vector(X, Y, 0.0)
+	FreeCAD.ActiveDocument.getObject(sShapeName).Size=nSIZE_LASER
+	FreeCAD.ActiveDocument.getObject(sShapeName).String=str(int(i-1))+'  '+ str(int(angle_deg))
+	FreeCAD.ActiveDocument.getObject(sShapeName).String=str(int(i-1))
+
+
+#-------------------------------------------------------------------
+
+App.activeDocument().recompute(None,True,True)
