@@ -1,21 +1,24 @@
 import math
 
-nSIZE=8
+nSIZE=11
 sNAME='ShapeString'
 fRadius=130
-X0=150 -nSIZE*1.8
-Y0=150 -nSIZE*1.8
+X0=150 -nSIZE*0.8
+Y0=150 -nSIZE*0.8
 
 #FreeCAD.ActiveDocument.getObject(sNAME).Size=nSIZE
 
 #-------------------------------------------------------------------
 for i in range(1, 25):
 
-	if (i>16):
-			nSIZE_LASER=nSIZE*0.8
-			#nSIZE_LASER=nSIZE*1.0
-	else:
-		nSIZE_LASER=nSIZE
+#	if (i>16):
+#			nSIZE_LASER=nSIZE*0.8
+#			#nSIZE_LASER=nSIZE*1.0
+#	else:
+#		nSIZE_LASER=nSIZE
+	nSIZE_LASER=nSIZE
+
+
 
 	angle_deg=-90 - (i-1)*15
 	angle=angle_deg/180*3.14
@@ -34,17 +37,25 @@ for i in range(1, 25):
 	FreeCAD.ActiveDocument.getObject(sShapeName).Placement.Base=FreeCAD.Vector(X, Y, 0.0)
 	FreeCAD.ActiveDocument.getObject(sShapeName).Size=nSIZE_LASER
 	FreeCAD.ActiveDocument.getObject(sShapeName).String=str(int(i-1))+'  '+ str(int(angle_deg))
+
+
 	FreeCAD.ActiveDocument.getObject(sShapeName).String=str(int(i-1))
+	if ((i-1)>12):		
+		FreeCAD.ActiveDocument.getObject(sShapeName).String=str(int(i-12-1))
+
 	if (i==1):
 		FreeCAD.ActiveDocument.getObject(sShapeName).String='24'
 		FreeCAD.ActiveDocument.getObject(sShapeName).Placement.Base=FreeCAD.Vector(X-nSIZE, Y, 0.0)
-		FreeCAD.ActiveDocument.getObject(sShapeName).Size=nSIZE_LASER*1.9
+		FreeCAD.ActiveDocument.getObject(sShapeName).Size=nSIZE_LASER*1.1
+
 	if (i==6+1):
-		FreeCAD.ActiveDocument.getObject(sShapeName).Size=nSIZE_LASER*1.9
+		FreeCAD.ActiveDocument.getObject(sShapeName).Size=nSIZE_LASER*1.1
+
 	if (i==12+1):
-		FreeCAD.ActiveDocument.getObject(sShapeName).Size=nSIZE_LASER*1.9
+		FreeCAD.ActiveDocument.getObject(sShapeName).Size=nSIZE_LASER*1.1
+
 	if (i==18+1):
-		FreeCAD.ActiveDocument.getObject(sShapeName).Size=nSIZE_LASER*1.9
+		FreeCAD.ActiveDocument.getObject(sShapeName).Size=nSIZE_LASER*1.1
 		
 
 #-------------------------------------------------------------------
