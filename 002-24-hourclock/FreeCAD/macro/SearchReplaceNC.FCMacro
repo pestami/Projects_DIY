@@ -1,0 +1,102 @@
+import os
+from pathlib import Path
+
+
+def directory_exists(directory):
+    return os.path.exists(directory) and os.path.isdir(directory)
+
+def search_and_replace_in_nc(directory, search_term, replace_term):
+    # Iterate over all .raw.nc files in the directory
+
+    print("====search_and_replace_in_nc====")
+	
+    directory_path = directory
+    if directory_exists(directory_path):
+     print(f"Directory '{directory_path}' exists.")
+    else:
+     print(f"Directory '{directory_path}' does not exist.")
+	
+    for file_path in Path(directory).glob('*raw.nc'):
+        print("Dir NC: " + str(file_path))
+        try:
+            # Read the content of the .raw.nc file
+            with open(file_path, 'r') as file:
+                file_content = file.read()
+            
+            # Check if the search term exists in the file content
+            if search_term in file_content:
+                print(f"Found '{search_term}' in file {file_path.name}. Replacing...")
+                
+                # Perform the search and replace operation
+                new_content = file_content.replace(search_term, replace_term)
+                
+                # Construct the new file name
+                new_file_path = file_path.with_suffix('.nc')
+                
+                # Save the modified content to a new file
+                with open(new_file_path, 'w') as new_file:
+                    new_file.write(new_content)
+                print(f"Modified file saved as {new_file_path.name}")
+            else:
+                print(f"No '{search_term}' found in file {file_path.name}. Skipping...")
+        except Exception as e:
+            print(f"An error occurred while processing {file_path.name}: {e}")
+
+if __name__ == "__main__":
+	
+	directory = '../../NC_ARCHIVE'  # Change to your target directory
+	directory = '/home/pi/Documents/Projects_DIY/002-24-hourclock/NC_ARCHIVE/' 
+
+	
+	current_directory = os.getcwd()
+	print("DIR: " + current_directory)
+
+#===========================================================================
+	search_term = '(Engrave'
+	replace_term = '''(======CODE MANDATORY============)
+M3 S0  (M03 – Spindle on in a clockwise)
+(================================)
+( BURN '''
+	search_and_replace_in_nc(directory, search_term, replace_term)
+
+#===========================================================================
+	search_term = 'Z-5.000000'
+	replace_term = 'Z0 S1000 (---LaserOn 100% ON)'
+	search_and_replace_in_nc(directory, search_term, replace_term)
+#===========================================================================
+#===========================================================================
+	search_term = 'G0 F0.000000 Z6.000000'
+	replace_term = 'G0 F1000 Z0 S0 (---LaserOn OFF)'
+	search_and_replace_in_nc(directory, search_term, replace_term)
+#===========================================================================
+#===========================================================================
+	search_term = 'G0 F0.000000 Z4.000000'
+	replace_term = 'G0 F1000 Z0 S0 (---LaserOn OFF)'
+	search_and_replace_in_nc(directory, search_term, replace_term)
+#===========================================================================
+#===========================================================================
+	search_term = 'G0 F0.000000'
+	replace_term = 'G0 F1000'
+	search_and_replace_in_nc(directory, search_term, replace_term)
+#===========================================================================
+#===========================================================================
+	search_term = 'G1 F0.000000'
+	replace_term = 'G1 F500'
+	search_and_replace_in_nc(directory, search_term, replace_term)
+#===========================================================================
+#===========================================================================
+	search_term = 'G2 F0.000000'
+	replace_term = 'G2 F500'
+	search_and_replace_in_nc(directory, search_term, replace_term)
+#===========================================================================
+#===========================================================================
+	search_term = 'G3 F0.000000'
+	replace_term = 'G3 F500'
+	search_and_replace_in_nc(directory, search_term, replace_term)
+#===========================================================================
+
+#===========================================================================
+	search_term = 'G0 Z6.000000'
+	replace_term = 'G0 Z6.000000 S0 (LASER OFF )'
+	search_and_replace_in_nc(directory, search_term, replace_term)
+#===========================================================================
