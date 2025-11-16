@@ -13,6 +13,7 @@
 (REPLACE G1 X ; G0 F750 X )
 (REPLACE G2 X ; G0 F750 X )
 (REPLACE G3 X ; G0 F750 X )
+(REPLACE Z-5.000000 Z0)
 (======CODE MANDATORY============)
 M3 S0  (M03 – Spindle on in a clockwise)
 (================================)
